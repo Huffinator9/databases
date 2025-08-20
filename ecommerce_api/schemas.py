@@ -2,7 +2,7 @@
 
 from marshmallow import fields, validate
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
-from models import User, Order, Product
+from models import db, User, Order, Product
 
 # User Schema
 
@@ -11,7 +11,7 @@ class UserSchema(SQLAlchemyAutoSchema):
         model = User
         load_instance = True
         include_relationships = True
-        sqla_session = None
+        sqla_session = db.session
 
     #extra validation
     email = fields.Email(required=True)
@@ -26,7 +26,7 @@ class OrderSchema(SQLAlchemyAutoSchema):
         load_instance = True
         inlude_relationships = True
         include_fk = True # ensures "user_id" shows up
-        sqla_session = None
+        sqla_session = db.session
 
     # show "order_date" in ISO format
     order_date = fields.DateTime(dump_only=True)
@@ -38,7 +38,7 @@ class ProductSchema(SQLAlchemyAutoSchema):
         model = Product
         load_instance = True
         include_relationships = True
-        sqla_session = None
+        sqla_session = db.session
 
     product_name = fields.String(required=True, validate=validate.Length(min=1, max=150))
     price = fields.Float(required=True, validate=validate.Range(min=0))
